@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>已发送 - 电子邮箱</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Microsoft Yahei", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2ec4b6;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #7a67ee;
+        }
+
+        /* 邮箱主界面样式 */
+        .email-container {
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.02);
+        }
+
+        /* 顶部导航栏 - 渐变配色 */
+        .email-header {
+            height: 80px;
+            background: linear-gradient(to right, #7a67ee, #2ec4b6);
+            color: #fff;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .email-logo {
+            width: 120px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .email-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            margin-right: 25px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-info i {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 主体内容区 */
+        .email-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧功能栏 */
+        .sidebar {
+            width: 220px;
+            background: #f5f7fa;
+            border-right: 1px solid #e9ecef;
+            padding-top: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .compose-btn {
+            width: 180px;
+            height: 45px;
+            background: linear-gradient(to right, #ff9f43, #ff3c68);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(255, 159, 67, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .compose-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 159, 67, 0.4);
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0 10px;
+        }
+
+        .menu-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            color: #495057;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: #e9ecef;
+            color: #7a67ee;
+            transform: translateX(3px);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(122,103,238,0.1), rgba(46,196,182,0.1));
+            border-left: 3px solid #7a67ee;
+            color: #7a67ee;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 邮件列表区 */
+        .email-list-area {
+            width: 380px;
+            border-right: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .list-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .list-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .search-box {
+            width: 220px;
+            height: 38px;
+            padding: 0 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box:focus-within {
+            border-color: #7a67ee;
+            box-shadow: 0 0 0 3px rgba(122,103,238,0.1);
+        }
+
+        .email-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        /* 自定义滚动条 */
+        .email-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .email-list::-webkit-scrollbar-track {
+            background: #f1f3f5;
+            border-radius: 3px;
+        }
+
+        .email-list::-webkit-scrollbar-thumb {
+            background: #dee2e6;
+            border-radius: 3px;
+        }
+
+        .email-list::-webkit-scrollbar-thumb:hover {
+            background: #adb5bd;
+        }
+
+        .email-item {
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #fff;
+            border: 1px solid #f1f3f5;
+            transition: all 0.3s ease;
+        }
+
+        .email-item:hover {
+            background: #f8f9fa;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        .email-item.active {
+            background: linear-gradient(90deg, rgba(122,103,238,0.05), rgba(46,196,182,0.05));
+            border: 1px solid rgba(122,103,238,0.2);
+        }
+
+        .email-sender {
+            margin-bottom: 6px;
+            color: #212529;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email-subject {
+            margin-bottom: 6px;
+            color: #495057;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .email-preview {
+            color: #868e96;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+
+        .email-time {
+            color: #adb5bd;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* 邮件预览区 */
+        .email-preview-area {
+            flex: 1;
+            padding: 35px;
+            overflow-y: auto;
+            background: #fff;
+        }
+
+        /* 自定义滚动条 */
+        .email-preview-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .email-preview-area::-webkit-scrollbar-track {
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .email-preview-area::-webkit-scrollbar-thumb {
+            background: #dee2e6;
+            border-radius: 4px;
+        }
+
+        .preview-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 40px;
+            border: 1px solid #f1f3f5;
+        }
+
+        .preview-header {
+            margin-bottom: 35px;
+            border-bottom: 1px solid #f1f3f5;
+            padding-bottom: 25px;
+        }
+
+        .preview-subject {
+            font-size: 26px;
+            margin-bottom: 25px;
+            color: #212529;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .preview-info {
+            color: #495057;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .preview-info p {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-info i {
+            color: #7a67ee;
+            width: 18px;
+            text-align: center;
+        }
+
+        .preview-content {
+            line-height: 1.8;
+            color: #343a40;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+        }
+
+        .preview-content p {
+            margin-bottom: 15px;
+        }
+
+        /* 附件预览样式 */
+        .attachment-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #e9ecef;
+        }
+
+        .attachment-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-icon {
+            font-size: 24px;
+            color: #7a67ee;
+        }
+
+        .attachment-details {
+            flex: 1;
+        }
+
+        .attachment-name {
+            font-weight: 500;
+            color: #212529;
+            margin-bottom: 4px;
+        }
+
+        .attachment-size {
+            font-size: 13px;
+            color: #868e96;
+        }
+
+        .attachment-download {
+            color: #2ec4b6;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .attachment-download:hover {
+            color: #7a67ee;
+        }
+
+        /* 邮件落款右对齐样式 */
+        .email-signature {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        /* 无预览内容样式 */
+        .empty-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #868e96;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-preview i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #dee2e6;
+        }
+
+        .empty-preview h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .empty-preview p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 刷新按钮旋转动画 */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .refresh-loading i {
+            animation: rotate 1.5s linear infinite;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar .menu-item span:not(.menu-icon) {
+                display: none;
+            }
+
+            .menu-icon {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .compose-btn span {
+                display: none;
+            }
+
+            .compose-btn {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .email-list-area {
+                width: 320px;
+            }
+
+            /* 响应式下调整Logo尺寸 */
+            .email-logo {
+                width: 100px;
+                height: 50px;
+            }
+
+            .email-header {
+                height: 70px;
+            }
+        }
+
+        /* 参考文献梗文字框样式 */
+        .reference-tag {
+            background-color: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+            transition: all 0.2s ease;
+        }
+
+        .reference-tag:hover {
+            background-color: #bbdefb;
+        }
+
+        /* 弹窗内跳转文字框样式 */
+        .jump-tag {
+            background-color: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .jump-tag:hover {
+            background-color: #bbdefb;
+        }
+
+        /* 弹窗样式 - 优化动画效果 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition:
+                opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                visibility 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px) scale(0.95);
+            opacity: 0.8;
+            transition:
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #868e96;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background-color: #f1f3f5;
+            color: #212529;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+            color: #495057;
+            font-size: 16px;
+            padding-bottom: 100px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        /* 弹窗右下角图片样式 */
+        .modal-image {
+            position: absolute;
+            bottom: 22px;
+            right: 20px;
+            width: 120px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: scale(0.9);
+            transition:
+                opacity 0.3s ease 0.2s,
+                transform 0.3s ease 0.2s;
+        }
+
+        .modal-overlay.active .modal-image {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 发送成功标记 */
+        .sent-badge {
+            display: inline-block;
+            background: rgba(46, 196, 182, 0.1);
+            color: #2ec4b6;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        /* 新增：本次委托结束按钮样式 */
+        .task-complete-btn {
+            display: block;
+            width: 220px;
+            height: 50px;
+            background: linear-gradient(to right, #7a67ee, #2ec4b6);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            margin: 30px auto;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(122, 103, 238, 0.2);
+        }
+
+        .task-complete-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(122, 103, 238, 0.3);
+            background: linear-gradient(to right, #8a77f0, #3ed4c6);
+        }
+
+        .task-complete-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(122, 103, 238, 0.2);
+        }
+
+        /* 新增：庆祝弹窗样式（复用基础弹窗样式，调整部分细节） */
+        #celebrationModal .modal-content {
+            text-align: center;
+            padding: 40px 30px;
+        }
+        #celebrationModal .modal-body {
+            padding-bottom: 20px;
+            font-size: 18px;
+            line-height: 2;
+        }
+        #celebrationModal .modal-title {
+            /* 修改1：End居中+字体增大3号 */
+            font-size: 30px; /* 原24px + 6px(3号) = 30px */
+            color: #7a67ee;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* 修改2：文本强调色样式 */
+        .text-primary-highlight {
+            color: #e74c3c; /* 强强调色-红色 */
+            font-weight: 700;
+        }
+
+        .text-secondary-highlight {
+            color: #3498db; /* 弱强调色-蓝色 */
+            font-weight: 500;
+            opacity: 0.8; /* 降低存在感 */
+        }
+
+        /* 修改3：重新阅读按钮样式 */
+        .read-again-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, #7a67ee, #2ec4b6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .read-again-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(122, 103, 238, 0.3);
+        }
+
+        /* 修改4：烟花特效容器 */
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1001; /* 确保在弹窗上方 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 邮箱主界面 -->
+    <div class="email-container" id="emailMain">
+        <!-- 顶部导航 -->
+        <div class="email-header">
+            <div class="header-left">
+                <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/bb284a03fa5249b09b3339690f380cc9.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=2026011701220809744C7F36DFAD2FCBE9&rrcfp=8a172a1a&x-expires=1769188929&x-signature=WZvhjL9ESbhMZ3%2FUHu2rf7libZY%3D" alt="电子邮箱" class="email-logo">
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>你</span>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </button>
+                <button class="header-btn" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>刷新</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="email-main">
+            <!-- 左侧功能栏 -->
+            <div class="sidebar">
+                <button class="compose-btn">
+                    <i class="fas fa-pen-fancy"></i>
+                    <span>写邮件</span>
+                </button>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <span class="menu-icon"><i class="fas fa-inbox"></i></span>
+                        <span>收件箱</span>
+                    </li>
+                    <li class="menu-item active">
+                        <span class="menu-icon"><i class="fas fa-paper-plane"></i></span>
+                        <span>已发送</span>
+                    </li>
+                    <li class="menu-item">
+                        <span class="menu-icon"><i class="fas fa-file-alt"></i></span>
+                        <span>草稿箱</span>
+                    </li>
+                    <li class="menu-item">
+                        <span class="menu-icon"><i class="fas fa-trash-alt"></i></span>
+                        <span>已删除</span>
+                    </li>
+                    <li class="menu-item">
+                        <span class="menu-icon"><i class="fas fa-star"></i></span>
+                        <span>星标邮件</span>
+                    </li>
+                    <li class="menu-item">
+                        <span class="menu-icon"><i class="fas fa-ban"></i></span>
+                        <span>垃圾邮件</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 邮件列表区 -->
+            <div class="email-list-area">
+                <div class="list-header">
+                    <div class="list-title">已发送邮件 <span class="sent-badge">已发送</span></div>
+                    <div class="search-box">
+                        <i class="fas fa-search" style="color: #adb5bd;"></i>
+                        <input type="text" style="border: none; outline: none; flex: 1; background: transparent;" placeholder="搜索已发送邮件...">
+                    </div>
+                </div>
+                <div class="email-list">
+                    <!-- 核心任务邮件 -->
+                    <div class="email-item active" data-email-type="sent-task" id="sentTaskEmail">
+                        <div class="email-sender">
+                            <span>你 <span class="sent-badge">发件人</span></span>
+                            <span class="email-time">2026年4月18日</span>
+                        </div>
+                        <div class="email-subject">清朗委托调查报告提交</div>
+                        <div class="email-preview">网络清朗公益组织：本次清朗委托已调查完毕，请查收调查报告...</div>
+                    </div>
+                    <!-- 其他已发送邮件 -->
+                    <div class="email-item" data-email-type="sent-normal">
+                        <div class="email-sender">
+                            <span>你 <span class="sent-badge">发件人</span></span>
+                            <span class="email-time">2026年3月11日</span>
+                        </div>
+                        <div class="email-subject">关于网络环境治理的建议</div>
+                        <div class="email-preview">尊敬的网络清朗公益组织，根据近期观察，我对网络环境治理提出以下几点建议...</div>
+                    </div>
+                    <div class="email-item" data-email-type="sent-normal">
+                        <div class="email-sender">
+                            <span>你 <span class="sent-badge">发件人</span></span>
+                            <span class="email-time">2026年2月15日</span>
+                        </div>
+                        <div class="email-subject">1月份工作进度报告</div>
+                        <div class="email-preview">本月我已完成以下工作任务，现提交进度报告供您审阅...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 邮件预览区 -->
+            <div class="email-preview-area" id="previewArea">
+                <!-- 已发送任务邮件内容 -->
+                <div class="preview-card" id="sentTaskPreview">
+                    <div class="preview-header">
+                        <h2 class="preview-subject">清朗委托调查报告提交</h2>
+                        <div class="preview-info">
+                            <p><i class="fas fa-user"></i>发件人：你 &lt;you@example.com&gt;</p>
+                            <p><i class="fas fa-user"></i>收件人：网络清朗公益组织 &lt;qinglang@public.org&gt;</p>
+                            <p><i class="fas fa-clock"></i>时间：2026年4月18日</p>
+                            <p><i class="fas fa-check-circle"></i>状态：<span style="color: #2ec4b6; font-weight: 600;">已发送</span></p>
+                        </div>
+                    </div>
+                    <div class="preview-content">
+                        <p>网络清朗公益组织：</p>
+                        <p>本次清朗委托已调查完毕，请查收调查报告。</p>
+
+                        <div class="email-signature">
+                            <p style="color: #7a67ee; font-weight: 600; margin-bottom: 5px;">网络侦探</p>
+                            <p style="color: #868e96;">2026年4月18日</p>
+                        </div>
+                    </div>
+
+                    <!-- 新增：本次委托结束按钮 -->
+                    <button class="task-complete-btn" id="taskCompleteBtn">本次委托结束</button>
+
+                    <!-- 附件预览 -->
+                    <div class="attachment-section">
+                        <h3 class="attachment-title"><i class="fas fa-paperclip"></i> 附件</h3>
+                        <div class="attachment-item">
+                            <i class="fas fa-file-word attachment-icon"></i>
+                            <div class="attachment-details">
+                                <div class="attachment-name">调查报告.docx</div>
+                                <div class="attachment-size">2.4 MB</div>
+                            </div>
+                            <div class="attachment-download">
+                                <i class="fas fa-download"></i> 下载
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 空预览模板 -->
+                <div class="empty-preview" id="emptyPreview" style="display: none;">
+                    <i class="fas fa-envelope-open"></i>
+                    <h3>暂无邮件预览</h3>
+                    <p>请从已发送邮件列表中选择一封邮件查看详情</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 参考文献梗弹窗 -->
+    <div class="modal-overlay" id="referenceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">什么是“参考文献”梗？</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>“参考文献”梗最初起源于学术圈，是网友们对学术论文中严谨标注参考文献格式的一种趣味化模仿，常用于网络讨论中要求对方提供观点的依据或来源。</p>
+                <p>当某篇帖子内容逻辑跳跃、难以理解或故意夸张时，网友们会用“标记一处参考文献”<span class="jump-tag" onclick="window.location.href='https://999isbest.github.io/Forum-detail-page-simulation/'">“震撼首发”</span>等评论回应，并模仿学术引用格式标注来源。</p>
+            </div>
+            <img src="https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/b67ebc8dfe91415b98708a1d75880f12.jpg~tplv-a9rns2rl98-24:720:720.image?lk3s=8e244e95&rcl=20260120034314BB81741E9B866CEC7485&rrcfp=8a172a1a&x-expires=1769456595&x-signature=U98wrKLcCmcAj9xjIuoISGjcXrs%3D" alt="标记一处参考文献" class="modal-image">
+        </div>
+    </div>
+
+    <!-- 新增：庆祝弹窗 -->
+    <div class="modal-overlay" id="celebrationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">End</h3>
+                <button class="modal-close" id="celebrationModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 修改2：应用不同的强调色 -->
+                <p class="text-primary-highlight">网络不是法外之地，言论表达须有边界</p>
+                <p class="text-primary-highlight">共建文明网络，从你我做起</p>
+                <p class="text-secondary-highlight">感谢您的阅读！</p>
+
+                <!-- 修改3：添加重新阅读按钮 -->
+                <button class="read-again-btn" id="readAgainBtn">重新阅读</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改4：烟花特效容器 -->
+    <div id="fireworks-container"></div>
+
+    <script>
+        // 获取核心元素
+        const sentTaskEmail = document.getElementById('sentTaskEmail');
+        const emailItems = document.querySelectorAll('.email-item');
+        const previewArea = document.getElementById('previewArea');
+        const sentTaskPreview = document.getElementById('sentTaskPreview');
+        const emptyPreview = document.getElementById('emptyPreview');
+        const refreshBtn = document.getElementById('refreshBtn');
+        // 新增：获取委托结束按钮
+        const taskCompleteBtn = document.getElementById('taskCompleteBtn');
+
+        // 弹窗相关元素
+        const referenceTag = document.getElementById('referenceTag');
+        const referenceModal = document.getElementById('referenceModal');
+        const modalClose = document.getElementById('modalClose');
+        // 新增：获取庆祝弹窗及关闭按钮
+        const celebrationModal = document.getElementById('celebrationModal');
+        const celebrationModalClose = document.getElementById('celebrationModalClose');
+        // 修改3：获取重新阅读按钮
+        const readAgainBtn = document.getElementById('readAgainBtn');
+
+        // 邮件点击交互逻辑
+        emailItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有邮件的选中状态
+                emailItems.forEach(mi => mi.classList.remove('active'));
+                // 添加当前邮件选中状态
+                this.classList.add('active');
+
+                // 判断邮件类型，显示对应预览内容
+                const emailType = this.getAttribute('data-email-type');
+                if (emailType === 'sent-task') {
+                    // 显示已发送任务邮件预览
+                    sentTaskPreview.style.display = 'block';
+                    emptyPreview.style.display = 'none';
+                } else {
+                    // 隐藏任务邮件预览，显示空预览
+                    sentTaskPreview.style.display = 'none';
+                    emptyPreview.style.display = 'flex';
+                }
+
+                // 添加微动画反馈
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-2px) scale(1)';
+                }, 200);
+            });
+        });
+
+        // 刷新按钮动画效果
+        refreshBtn.addEventListener('click', function() {
+            this.classList.add('refresh-loading');
+            // 模拟加载过程
+            setTimeout(() => {
+                this.classList.remove('refresh-loading');
+            }, 1500);
+        });
+
+        // 左侧菜单选中效果
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(mi => mi.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 弹窗通用关闭函数
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                modal.style.opacity = '';
+                modal.querySelector('.modal-content').style.transform = '';
+            }, 400);
+        }
+
+        // 打开弹窗函数
+        function openModal(modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // 修改4：弹窗打开时触发烟花特效
+            createFireworks();
+        }
+
+        // 参考文献弹窗关闭逻辑
+        modalClose.addEventListener('click', () => closeModal(referenceModal));
+        referenceModal.addEventListener('click', function(e) {
+            if (e.target === referenceModal) closeModal(referenceModal);
+        });
+
+        // 庆祝弹窗关闭逻辑
+        celebrationModalClose.addEventListener('click', () => closeModal(celebrationModal));
+        celebrationModal.addEventListener('click', function(e) {
+            if (e.target === celebrationModal) closeModal(celebrationModal);
+        });
+
+        // 按ESC键关闭所有弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (referenceModal.classList.contains('active')) closeModal(referenceModal);
+                if (celebrationModal.classList.contains('active')) closeModal(celebrationModal);
+            }
+        });
+
+        // 附件下载交互
+        document.querySelectorAll('.attachment-download').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const fileName = this.closest('.attachment-item').querySelector('.attachment-name').textContent;
+                alert(`开始下载: ${fileName}`);
+                // 这里可以添加实际的下载逻辑
+            });
+        });
+
+        // 修改：委托结束按钮点击逻辑 - 弹出庆祝弹窗
+        taskCompleteBtn.addEventListener('click', function() {
+            openModal(celebrationModal);
+        });
+
+        // 修改3：重新阅读按钮点击事件 - 页面跳转
+        readAgainBtn.addEventListener('click', function() {
+            window.location.href = 'https://999isbest.github.io/start/';
+        });
+
+        // 修改4：烟花特效函数
+        function createFireworks() {
+            const container = document.getElementById('fireworks-container');
+            container.innerHTML = ''; // 清空之前的烟花
+
+            // 创建多个烟花粒子
+            const fireworksCount = 15; // 烟花数量
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
+
+            for (let i = 0; i < fireworksCount; i++) {
+                // 随机位置
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+
+                // 创建烟花元素
+                const firework = document.createElement('div');
+                firework.style.position = 'absolute';
+                firework.style.left = `${x}px`;
+                firework.style.top = `${y}px`;
+                firework.style.width = '10px';
+                firework.style.height = '10px';
+                firework.style.borderRadius = '50%';
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.opacity = '1';
+                firework.style.pointerEvents = 'none';
+
+                // 添加动画
+                firework.style.transition = `all ${1 + Math.random() * 2}s ease-out`;
+
+                container.appendChild(firework);
+
+                // 触发动画
+                setTimeout(() => {
+                    // 随机扩散
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 50 + Math.random() * 150;
+                    const dx = Math.cos(angle) * distance;
+                    const dy = Math.sin(angle) * distance;
+
+                    firework.style.transform = `translate(${dx}px, ${dy}px)`;
+                    firework.style.width = '2px';
+                    firework.style.height = '2px';
+                    firework.style.opacity = '0';
+                }, 10);
+
+                // 移除烟花元素
+                setTimeout(() => {
+                    firework.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
