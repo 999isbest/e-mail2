@@ -910,6 +910,9 @@
                                 <div class="attachment-name">调查报告.docx</div>
                                 <div class="attachment-size">2.4 MB</div>
                             </div>
+                            <div class="attachment-download">
+                                <i class="fas fa-download"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1074,7 +1077,7 @@
         document.querySelectorAll('.attachment-download').forEach(btn => {
             btn.addEventListener('click', function() {
                 const fileName = this.closest('.attachment-item').querySelector('.attachment-name').textContent;
-                alert(`开始下载: ${fileName}`);
+                alert(`附件已上传成功: ${fileName}`);
                 // 这里可以添加实际的下载逻辑
             });
         });
