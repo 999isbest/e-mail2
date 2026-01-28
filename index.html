@@ -910,7 +910,6 @@
                                 <div class="attachment-name">调查报告.docx</div>
                                 <div class="attachment-size">2.4 MB</div>
                             </div>
-                            <!-- 移除了下载按钮 -->
                         </div>
                     </div>
                 </div>
@@ -1069,6 +1068,15 @@
                 if (referenceModal.classList.contains('active')) closeModal(referenceModal);
                 if (celebrationModal.classList.contains('active')) closeModal(celebrationModal);
             }
+        });
+
+        // 附件下载交互
+        document.querySelectorAll('.attachment-download').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const fileName = this.closest('.attachment-item').querySelector('.attachment-name').textContent;
+                alert(`开始下载: ${fileName}`);
+                // 这里可以添加实际的下载逻辑
+            });
         });
 
         // 修改：委托结束按钮点击逻辑 - 弹出庆祝弹窗
