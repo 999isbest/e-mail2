@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>已发送 - 电子邮箱</title>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +20,15 @@
             color: #333;
             font-size: 14px;
             line-height: 1.5;
+            overflow-x: hidden; /* 关键：禁止横向滚动 */
+            width: 100%;
+            height: 100%;
+        }
+
+        html {
+            overflow-x: hidden; /* 关键：禁止横向滚动 */
+            width: 100%;
+            height: 100%;
         }
 
         a {
@@ -41,6 +50,7 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 0 20px rgba(0,0,0,0.02);
+            overflow: hidden; /* 防止内容溢出 */
         }
 
         /* 顶部导航栏 - 渐变配色 */
@@ -55,6 +65,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             position: relative;
             z-index: 10;
+            flex-shrink: 0; /* 防止被压缩 */
         }
 
         .header-left {
@@ -119,7 +130,8 @@
         .email-main {
             display: flex;
             flex: 1;
-            overflow: hidden;
+            overflow: hidden; /* 关键：隐藏溢出内容 */
+            min-width: 0; /* 修复flex容器最小宽度问题 */
         }
 
         /* 左侧功能栏 */
@@ -129,6 +141,8 @@
             border-right: 1px solid #e9ecef;
             padding-top: 25px;
             transition: all 0.3s ease;
+            flex-shrink: 0; /* 防止被压缩 */
+            overflow-y: auto; /* 纵向滚动 */
         }
 
         .compose-btn {
@@ -199,6 +213,8 @@
             display: flex;
             flex-direction: column;
             background: #fff;
+            flex-shrink: 0; /* 防止被压缩 */
+            overflow: hidden; /* 隐藏溢出 */
         }
 
         .list-header {
@@ -208,6 +224,7 @@
             justify-content: space-between;
             align-items: center;
             background: #f8f9fa;
+            flex-shrink: 0; /* 防止被压缩 */
         }
 
         .list-title {
@@ -268,6 +285,7 @@
             background: #fff;
             border: 1px solid #f1f3f5;
             transition: all 0.3s ease;
+            width: 100%; /* 确保宽度100% */
         }
 
         .email-item:hover {
@@ -319,6 +337,7 @@
             padding: 35px;
             overflow-y: auto;
             background: #fff;
+            min-width: 0; /* 修复flex容器最小宽度问题 */
         }
 
         /* 自定义滚动条 */
@@ -342,6 +361,8 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             padding: 40px;
             border: 1px solid #f1f3f5;
+            width: 100%; /* 确保宽度100% */
+            max-width: 100%; /* 防止超出容器 */
         }
 
         .preview-header {
@@ -356,6 +377,7 @@
             color: #212529;
             font-weight: 700;
             letter-spacing: 0.3px;
+            word-wrap: break-word; /* 自动换行 */
         }
 
         .preview-info {
@@ -369,6 +391,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap; /* 允许换行 */
         }
 
         .preview-info i {
@@ -382,6 +405,7 @@
             color: #343a40;
             font-size: 16px;
             letter-spacing: 0.2px;
+            word-wrap: break-word; /* 自动换行 */
         }
 
         .preview-content p {
@@ -462,6 +486,7 @@
             color: #868e96;
             text-align: center;
             padding: 40px;
+            width: 100%; /* 确保宽度100% */
         }
 
         .empty-preview i {
@@ -489,46 +514,6 @@
 
         .refresh-loading i {
             animation: rotate 1.5s linear infinite;
-        }
-
-        /* 响应式适配 */
-        @media (max-width: 1200px) {
-            .sidebar {
-                width: 80px;
-            }
-
-            .sidebar .menu-item span:not(.menu-icon) {
-                display: none;
-            }
-
-            .menu-icon {
-                margin-right: 0;
-                font-size: 20px;
-            }
-
-            .compose-btn span {
-                display: none;
-            }
-
-            .compose-btn {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-            }
-
-            .email-list-area {
-                width: 320px;
-            }
-
-            /* 响应式下调整Logo尺寸 */
-            .email-logo {
-                width: 150px;
-                height: 50px;
-            }
-
-            .email-header {
-                height: 70px;
-            }
         }
 
         /* 参考文献梗文字框样式 */
@@ -776,6 +761,216 @@
             pointer-events: none;
             z-index: 1001; /* 确保在弹窗上方 */
         }
+
+        /* ====================================== */
+        /* 整合完整的移动端适配代码（从原代码迁移） */
+        /* ====================================== */
+        /* 响应式适配 (1200px以下) */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar .menu-item span:not(.menu-icon) {
+                display: none;
+            }
+
+            .menu-icon {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .compose-btn span {
+                display: none;
+            }
+
+            .compose-btn {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .email-list-area {
+                width: 320px;
+            }
+
+            /* 响应式下调整Logo尺寸 */
+            .email-logo {
+                width: 120px;
+                height: 50px;
+            }
+
+            .email-header {
+                height: 70px;
+                padding: 0 15px; /* 减小内边距 */
+            }
+
+            .user-info {
+                margin-right: 10px; /* 减小间距 */
+                font-size: 14px;
+            }
+
+            .header-btn {
+                padding: 6px 10px; /* 减小按钮尺寸 */
+                margin-left: 8px;
+                font-size: 13px;
+            }
+        }
+
+        /* 移动端优化 (768px以下) */
+        @media (max-width: 768px) {
+            /* 彻底禁止横向滚动 */
+            html, body {
+                overflow-x: hidden !important;
+            }
+
+            /* 重新布局 - 堆叠显示 */
+            .email-main {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px 0;
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .compose-btn {
+                margin: 0 auto 15px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .menu-list {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 15px;
+                gap: 5px;
+            }
+
+            .menu-item {
+                padding: 10px 15px;
+                white-space: nowrap;
+                margin-bottom: 0;
+            }
+
+            .email-list-area {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+                max-height: 300px;
+            }
+
+            .search-box {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .email-preview-area {
+                padding: 15px;
+            }
+
+            .preview-card {
+                padding: 20px;
+            }
+
+            .preview-subject {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .preview-header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+
+            .preview-content {
+                font-size: 14px;
+            }
+
+            /* 弹窗适配 */
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-body {
+                padding-bottom: 80px;
+                font-size: 14px;
+            }
+
+            .modal-image {
+                width: 80px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            /* 适配已发送页面的特殊元素 */
+            .task-complete-btn {
+                width: 180px;
+                height: 45px;
+                font-size: 14px;
+            }
+
+            .attachment-item {
+                padding: 10px 12px;
+            }
+
+            .attachment-icon {
+                font-size: 20px;
+            }
+        }
+
+        /* 小屏手机优化 (480px以下) */
+        @media (max-width: 480px) {
+            .email-header {
+                height: 60px;
+                padding: 0 10px;
+            }
+
+            .email-logo {
+                width: 100px;
+                height: 40px;
+            }
+
+            .user-info {
+                display: none; /* 隐藏用户信息 */
+            }
+
+            .list-header {
+                padding: 10px 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .email-item {
+                padding: 12px 15px;
+            }
+
+            .empty-preview i {
+                font-size: 40px;
+            }
+
+            .empty-preview h3 {
+                font-size: 18px;
+            }
+
+            /* 适配已发送页面的特殊元素 */
+            .preview-card {
+                padding: 15px;
+            }
+
+            .task-complete-btn {
+                width: 150px;
+                height: 40px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -872,7 +1067,7 @@
                             <span>你 <span class="sent-badge">发件人</span></span>
                             <span class="email-time">2026年2月15日</span>
                         </div>
-                        <div class="email-subject">本月清朗委托调查报告提交</div>
+                        <div class="email-subject">1月份工作进度报告</div>
                         <div class="email-preview">本月我已完成以下工作任务，现提交进度报告供您审阅...</div>
                     </div>
                 </div>
@@ -883,7 +1078,7 @@
                 <!-- 已发送任务邮件内容 -->
                 <div class="preview-card" id="sentTaskPreview">
                     <div class="preview-header">
-                        <h2 class="preview-subject">本月清朗委托调查报告提交</h2>
+                        <h2 class="preview-subject">清朗委托调查报告提交</h2>
                         <div class="preview-info">
                             <p><i class="fas fa-user"></i>发件人：你 &lt;you@example.com&gt;</p>
                             <p><i class="fas fa-user"></i>收件人：网络清朗公益组织 &lt;qinglang@public.org&gt;</p>
@@ -914,7 +1109,7 @@
                                 <div class="attachment-size">2.4 MB</div>
                             </div>
                             <div class="attachment-download">
-                                <i class="fas fa-download"></i>  
+                                <i class="fas fa-download"></i> 下载
                             </div>
                         </div>
                     </div>
@@ -1146,7 +1341,12 @@
                 }, 3000);
             }
         }
+
+        // 新增：窗口大小变化时重新计算布局（防止移动端布局错乱）
+        window.addEventListener('resize', function() {
+            // 强制重绘，防止布局错乱
+            document.body.style.overflowX = 'hidden';
+        });
     </script>
 </body>
 </html>
-
