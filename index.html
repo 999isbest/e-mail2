@@ -1037,7 +1037,6 @@
             <!-- 邮件列表区 -->
             <div class="email-list-area">
                 <div class="list-header">
-                    <div class="list-title">已发送邮件 <span class="sent-badge">已发送</span></div>
                     <div class="search-box">
                         <i class="fas fa-search" style="color: #adb5bd;"></i>
                         <input type="text" style="border: none; outline: none; flex: 1; background: transparent;" placeholder="搜索已发送邮件...">
@@ -1096,6 +1095,23 @@
                             <p style="color: #868e96;">2026年5月25日</p>
                         </div>
                     </div>
+
+                     <!-- 参考文献梗弹窗 -->
+    <div class="modal-overlay" id="referenceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">什么是“参考文献”梗？</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>“参考文献”梗最初起源于学术圈，是网友们对学术论文中严谨标注参考文献格式的一种趣味化模仿，常用于网络讨论中要求对方提供观点的依据或来源。</p>
+                <p>当某篇帖子内容逻辑跳跃、难以理解或故意夸张时，网友们会用“标记一处参考文献”<span class="jump-tag" onclick="window.location.href='https://999isbest.github.io/Forum-detail-page-simulation/'">“震撼首发”</span>等评论回应，并模仿学术引用格式标注来源。</p>
+            </div>
+            <img src="https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/b67ebc8dfe91415b98708a1d75880f12.jpg~tplv-a9rns2rl98-24:720:720.image?lk3s=8e244e95&rcl=20260120034314BB81741E9B866CEC7485&rrcfp=8a172a1a&x-expires=1769456595&x-signature=U98wrKLcCmcAj9xjIuoISGjcXrs%3D" alt="标记一处参考文献" class="modal-image">
+        </div>
+    </div>
 
                     <!-- 新增：本次委托结束按钮 -->
                     <button class="task-complete-btn" id="taskCompleteBtn">本次委托结束</button>
